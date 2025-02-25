@@ -1,2 +1,4 @@
 setuptools
 numpy
+plotly-express
+plotly
