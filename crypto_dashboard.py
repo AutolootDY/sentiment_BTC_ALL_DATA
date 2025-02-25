@@ -1,8 +1,10 @@
 import pandas as pd
+import pandas_ta as ta
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import streamlit as st
+
 
 
 
@@ -11,8 +13,10 @@ st.title("Crypto Sentiment Analysis with EMA Strategy")
 
 # โหลดข้อมูล
 st.sidebar.header("Upload CSV Files")
-prices_file = st.sidebar.file_uploader("Upload Prices CSV", type=["csv"])
-sentiment_file = st.sidebar.file_uploader("Upload Sentiment CSV", type=["csv"])
+prices_file_path = "mt5_data_XAUUSD_TF1H_FUB_TH.csv"
+sentiment_file_path = "daily_sentiment.csv"
+
+
 
 # 🎚️ ปรับค่า EMA
 ema_short = st.sidebar.slider("EMA Short Period", min_value=5, max_value=50, value=7, step=1)
@@ -24,6 +28,8 @@ def load_crypto_data(data):
     data.columns = data.columns.get_level_values(0)
     df = data.copy().reset_index()
       # 📈 คำนวณ EMA
+    # df["ema_short"] = ta.ema(df["Close"], length=ema_short)
+    # df["ema_long"] = ta.ema(df["Close"], length=ema_long)
     df["ema_short"] = df["Close"].ewm(span=ema_short, adjust=False).mean()
     df["ema_long"] = df["Close"].ewm(span=ema_long, adjust=False).mean()
 
@@ -106,22 +112,27 @@ def plot_returns1(df):
     fig = px.bar(df_melted, x="date", y="Return", color="Return Period", title="Interactive Return After Signal Buy", labels={"Return": "Return (%)", "date": "Date"}, color_discrete_sequence=px.colors.qualitative.Set1)
     return fig
 
-if prices_file and sentiment_file:
 
-    df_prices = pd.read_csv(prices_file)
-    df_sentiment = pd.read_csv(sentiment_file)
-    df_prices=load_crypto_data(df_prices)
-    df_merged = merge_data(df_prices, df_sentiment)
-    df_merged = generate_signal(df_merged,ema_days)
-    df_merged = calculate_returns(df_merged)
+# อ่านข้อมูล
+df_prices = pd.read_csv(prices_file_path)
+df_sentiment = pd.read_csv(sentiment_file_path)
+
+# นำข้อมูลไปใช้
+df_prices = load_crypto_data(df_prices)
+df_merged = merge_data(df_prices, df_sentiment)
+
+df_prices=load_crypto_data(df_prices)
+df_merged = merge_data(df_prices, df_sentiment)
+df_merged = generate_signal(df_merged,ema_days)
+df_merged = calculate_returns(df_merged)
+
+st.write("## Merged Data Preview")
+st.dataframe(df_merged)
+
+st.write("## Trading Strategy Visualization")
+st.plotly_chart(plot_trading_strategy(df_merged))
+
+st.write("## Returns After Signal Buy")
+st.plotly_chart(plot_returns1(df_merged))
     
-    st.write("## Merged Data Preview")
-    st.dataframe(df_merged)
-    
-    st.write("## Trading Strategy Visualization")
-    st.plotly_chart(plot_trading_strategy(df_merged))
-    
-    st.write("## Returns After Signal Buy")
-    st.plotly_chart(plot_returns1(df_merged))
-    
-    st.success("Analysis Completed! ✅")
+st.success("Analysis Completed! ✅")
