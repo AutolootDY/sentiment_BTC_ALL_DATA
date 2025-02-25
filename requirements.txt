@@ -1,6 +1,3 @@
 pandas
 pandas_ta
-plotly.express
-plotly.graph_objects
-plotly.subplots
-streamlit
+
