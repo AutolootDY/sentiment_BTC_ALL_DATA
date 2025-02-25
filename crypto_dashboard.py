@@ -25,8 +25,9 @@ def load_crypto_data(data):
     data.columns = data.columns.get_level_values(0)
     df = data.copy().reset_index()
       # 📈 คำนวณ EMA
-    df["ema_short"] = ta.ema(df["Close"], length=ema_short)
-    df["ema_long"] = ta.ema(df["Close"], length=ema_long)
+    df["ema_short"] = df["Close"].ewm(span=ema_short, adjust=False).mean()
+    df["ema_long"] = df["Close"].ewm(span=ema_long, adjust=False).mean()
+
 
     df.rename(columns={"Date": "date"}, inplace=True)
     df["date"] = pd.to_datetime(df["date"]).dt.normalize()  # ตัดเวลาออก
