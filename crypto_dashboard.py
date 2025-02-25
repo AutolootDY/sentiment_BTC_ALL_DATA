@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import streamlit as st
 
-tv = TvDatafeed()
+
 
 # ตั้งค่าหัวข้อ Streamlit
 st.title("Crypto Sentiment Analysis with EMA Strategy")
