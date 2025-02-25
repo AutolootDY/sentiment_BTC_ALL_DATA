@@ -1,15 +1,9 @@
-import os
-import shutil
-import yfinance as yf
 import pandas as pd
 import pandas_ta as ta
-import matplotlib.pyplot as plt
-import seaborn as sns
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import streamlit as st
-from tvDatafeed import TvDatafeed, Interval
 
 tv = TvDatafeed()
 
