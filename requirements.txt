@@ -4,3 +4,12 @@ pandas
 numpy
 tradingview-datafeed
 yfinance
+os
+shutil
+pandas_ta
+matplotlib
+seaborn
+plotly.express
+plotly.graph_objects
+plotly.subplots 
+streamlit 
