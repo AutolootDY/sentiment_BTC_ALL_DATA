@@ -48,7 +48,7 @@ def merge_data(df_prices, df_sentiment):
 def generate_signal(df,ema_days):
     df = df.copy()
     df["signal_buy"] = 0
-    high_negative_days = df[df["Positive - Negative"] < -1].index
+    high_negative_days = df[df["Positive - Negative"] < -30].index
     for idx in high_negative_days:
         future_days = df.loc[idx+1:]
         positive_day = future_days[future_days["Positive - Negative"] > 0]
